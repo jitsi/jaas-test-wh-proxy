@@ -59,6 +59,9 @@ app.post('/wh', function(req, res) {
  * which to send to the original client.
  */
 app.post('/wh/settings', async function(req, res) {
+    console.log('-------------------');
+    console.log(JSON.stringify(req.headers));
+    console.log('-------------------');
     const ws = waitingClients.get(req.body.fqn);
     if (ws) {
         const promise = new Promise((resolve) => {
