@@ -80,6 +80,8 @@ app.post('/wh/settings', async function(req, res) {
         }));
 
         return await promise;
+    } else {
+        res.json({});
     }
 });
 
