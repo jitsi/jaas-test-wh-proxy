@@ -65,7 +65,7 @@ app.post('/wh/settings', async function(req, res) {
             const handler = (message) => {
                 const parsedMessage = JSON.parse(message);
 
-                resolve(res.json(parsedMessage));
+                resolve(parsedMessage);
             };
 
             ws.on('message', message => {
@@ -79,7 +79,7 @@ app.post('/wh/settings', async function(req, res) {
             eventType: 'SETTINGS_PROVISIONING',
         }));
 
-        return await promise;
+        return res.json(await promise);
     } else {
         res.json({});
     }
