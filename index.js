@@ -34,7 +34,9 @@ const wsClientsTotalCounter = new promClient.Counter({
  * Middleware to check if the request has the correct shared secret.
  */
 app.use((req, res, next) => {
-    if (!req.headers.authorization || req.headers.authorization !== process.env.SHARED_SECRET) {
+    const providedSecret = req.headers.authorization || req.query.secret;
+
+    if (!providedSecret || providedSecret !== process.env.SHARED_SECRET) {
         badCredentialsTotalCounter.inc({ method: req.method });
         return res.status(403).json({ error: 'bad credentials' });
     }
@@ -114,7 +116,16 @@ const websocketServer = new WebSocketServer({
  * A shared secret is required to establish the connection.
  */
 expressServer.on('upgrade', (request, socket, head) => {
-    if (!request.headers.authorization || request.headers.authorization !== process.env.SHARED_SECRET) {
+    let providedSecret = request.headers.authorization;
+
+    if (!proviedSecret) {
+        const [_path, params] = request?.url?.split('?');
+        const connectionParams = queryString.parse(params);
+
+        providedSecret = connectionParams.secret;
+    }
+
+    if (!providedSecret || providedSecret !== process.env.SHARED_SECRET) {
         badCredentialsTotalCounter.inc({ method: 'ws' });
         socket.destroy();
         return;
