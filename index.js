@@ -10,7 +10,13 @@ const privateApp = express();
 
 const port = process.env.PORT || 18080;
 const privatePort = process.env.PRIVATE_PORT || 18081;
+const sharedSecret = process.env.SHARED_SECRET;
 const waitingClients = new Map();
+
+if (!sharedSecret) {
+    console.log('SHARED_SECRET must be defined.');
+    process.exit(1)
+}
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
