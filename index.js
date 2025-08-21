@@ -124,7 +124,7 @@ const websocketServer = new WebSocketServer({
 expressServer.on('upgrade', (request, socket, head) => {
     let providedSecret = request.headers.authorization;
 
-    if (!proviedSecret) {
+    if (!providedSecret) {
         const [_path, params] = request?.url?.split('?');
         const connectionParams = queryString.parse(params);
 
